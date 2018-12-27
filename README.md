@@ -53,7 +53,8 @@ Running `npm test` will run the unit tests with karma.
    ? What would you like to write Chai assertions with? Expect
 
 
-2. Run `npm install --save dotenv` to install dotenv module. Add .env file in root folder. Import dotenv module in server/config/environment/index.js.
+2. dotenv configuration 
+  Run `npm install --save dotenv` to install dotenv module. Add .env file in root folder. Import dotenv module in server/config/environment/index.js.
    configure it with root folder `import dotenv from 'dotenv';
                                   
                                   const root = path.normalize(`${__dirname}/../../..`);
@@ -64,6 +65,7 @@ Running `npm test` will run the unit tests with karma.
                          env,
                          require('./shared'),
                          require(`./${process.env.NODE_ENV}.js`) || {});`
+    Add .env to .gitignore                     
                          
 3. Connect to MySQL DB
     - Remove SQLite and install MySQL
@@ -98,3 +100,90 @@ Running `npm test` will run the unit tests with karma.
          `MYSQL="mysql://username:password@192.168.0.200/testdb"`
          Replace `sequelize: new Sequelize(config.sequelize.uri, config.sequelize.options)` with  `sequelize: new Sequelize(config.MYSQL, config.sequelize.options)`
          in `server/sqldb/index.js`
+         
+4. Install Winston Logger
+    - Add following in package.json
+    ```json
+      "winston": "^2.4.0",
+      "winston-daily-rotate-file": "^1.7.2"      
+   ```
+      Run `npm i`
+      
+     - Create a folder in server/components/logger. Create a new file named index.js within this folder. Add following code to the file
+     
+       ```js
+       const winston = require('winston');
+        const DailyRotateFile = require('winston-daily-rotate-file');
+        const Sentry = require('winston-raven-sentry');
+        
+        const { root, NODE_ENV, SENTRY_DSN } = require('../../config/environment');
+        
+        const logger = new winston.Logger({
+          transports: [
+            new DailyRotateFile({
+              name: 'error-file',
+              datePattern: '.yyyy-MM-dd.log',
+              filename: `${root}/logs/error`,
+            }),
+            new Sentry({
+              dsn: NODE_ENV === 'production' && SENTRY_DSN,
+              install: true,
+              config: { environment: NODE_ENV, release: '@@_RELEASE_' },
+            }),
+          ],
+        });
+        
+        if (NODE_ENV !== 'production') logger.add(winston.transports.Console);
+        
+        module.exports = logger;
+     ```
+     - Add following code to .gitignore
+        `logs/*`
+        `!logs/.gitkeep`
+        
+     - Create a new folder named logs in root directory and add new file name .gitkeep
+        ```sh
+          mkdir logs
+          touch logs/.gitkeep
+        ```
+        
+5. Install Sentry
+    - Create project in sentry https://prnt.sc/lzpczs
+    - Add following to package.json and run npm install
+       ```metadata json
+        "winston-raven-sentry": "^1.0.1"
+       ```
+    - Add sentry DSN to .env
+    
+    - Add middleware to route.js
+        ```js
+          // import logger
+         import logger from './components/logger';
+
+          // Add middleware for sentry logging
+          app.use(logger.transports.sentry.raven.errorHandler());
+
+          app.use((e, req, res, next) => {
+              if (!next) return null;
+              const err = e;
+              const { body, headers, user: u } = req;
+          
+              logger.error(err.message, err, {
+                url: req.originalUrl,
+                body,
+                headers,
+                user: u,
+              });
+          
+              return res.status(500).json({ message: err.message, stack: err.stack });
+            });
+         ```
+      - Add middleware for sentry in server/config/express.js
+         ```js
+            import logger from '../components/logger';
+
+            // before view engine
+           app.use(logger.transports.sentry.raven.requestHandler(true));
+
+         ````   
+

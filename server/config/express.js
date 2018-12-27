@@ -19,6 +19,8 @@ import session from 'express-session';
 import sqldb from '../sqldb';
 let Store = require('connect-session-sequelize')(session.Store);
 
+import logger from '../components/logger';
+
 export default function(app) {
   var env = app.get('env');
 
@@ -33,6 +35,9 @@ export default function(app) {
   app.set('appPath', path.join(config.root, 'client'));
   app.use(express.static(app.get('appPath')));
   app.use(morgan('dev'));
+
+  app.use(logger.transports.sentry.raven.requestHandler(true));
+
 
   app.set('views', `${config.root}/server/views`);
   app.set('view engine', 'pug');
