@@ -1,4 +1,4 @@
-import { ABC_BCC_EMAIL, FLEXABILITY_BCC_EMAIL, ENABLE_CRONOFY } from '../config/environment';
+const { ABC_BCC_EMAIL, FLEXABILITY_BCC_EMAIL, ENABLE_CRONOFY } = require( '../config/environment');
 
 const BUCKETS = {
   REPORT_TYPES: {

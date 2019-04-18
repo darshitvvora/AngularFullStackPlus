@@ -1,23 +1,26 @@
-'use strict';
-/*eslint no-process-env:0*/
-
 // Development specific configuration
 // ==================================
-module.exports = {
 
-  // Sequelize connection opions
-  sequelize: {
-    uri: 'sqlite://',
-    options: {
-      logging: false,
-      storage: 'dev.sqlite',
-      define: {
-        timestamps: false
-      }
-    }
+const { log: logging } = console;
+module.exports = {
+  solr: {
+    host: process.env.SOLR_HOST,
+    port: process.env.SOLR_PORT,
+    core: process.env.SOLR_CORE,
+    path: process.env.SOLR_PATH,
   },
 
-  // Seed database on startup
-  seedDB: true
+  MINIO: {
+    endPoint: process.env.MINIO_ENDPOINT,
+    accessKey: process.env.MINIO_ACCESS_KEY,
+    secretKey: process.env.MINIO_SECRET_KEY,
+    secure: false,
+    port: 8000,
+  },
 
+  smtp: {
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    ignoreTLS: true,
+  },
 };

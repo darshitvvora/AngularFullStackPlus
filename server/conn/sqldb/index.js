@@ -1,5 +1,5 @@
-import _ from 'lodash';
-import Sequelize from 'sequelize';
+const _ = require('lodash');
+const Sequelize = require('sequelize');
 
 const config = require('../../config/environment');
 
@@ -17,23 +17,16 @@ const sqlDefaults = {
 const db = {
   Sequelize,
   sequelize: new Sequelize(config.CTHREE_MYSQL, sqlDefaults),
-  sequelizeLog: new Sequelize(config.LOG_MYSQL, sqlDefaults),
 };
 
 [
   // - Enums
-  'User',
-  // - Others
-  'Log', 'Session',
+  // 'User',
+  // // - Others
+  // 'Log', 'Session',
 
 ].forEach(model => {
   db[model] = db.sequelize.import(`../../api/${_.camelCase(model)}/${_.camelCase(model)}.model.js`);
-});
-
-[
-  'UserLog',
-].forEach(model => {
-  db[model] = db.sequelizeLog.import(`../../api/${_.camelCase(model)}/${_.camelCase(model)}.model.js`);
 });
 
 Object.keys(db).forEach(modelName => {

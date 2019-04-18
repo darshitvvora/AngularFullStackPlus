@@ -1,13 +1,14 @@
 'use strict';
 /*eslint no-process-env:0*/
 
-import path from 'path';
-import _ from 'lodash';
-import dotenv from 'dotenv';
+const path = require('path');
+const _ = require('lodash');
+const dotenv = require('dotenv');
 
 const root = path.normalize(`${__dirname}/../../..`);
 
-const env = dotenv.config({ path: path.join(root, '.env') });
+const env = dotenv.config({ path: path.join(root, '.env') }).parsed;
+
 const IS_DEV = env.NODE_ENV === 'development';
 const { DOMAIN, PREFIX } = env;
 

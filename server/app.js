@@ -4,11 +4,10 @@
 
 'use strict';
 
-import express from 'express';
-import sqldb from './conn/sqldb';
-import config from './config/environment';
-import http from 'http';
-import seedDatabaseIfNeeded from './config/seed';
+const express = require('express');
+const sqldb = require('./conn/sqldb');
+const config = require('./config/environment');
+const http = require('http');
 
 // Setup server
 var app = express();
@@ -29,7 +28,6 @@ function startServer() {
 }
 
 sqldb.sequelize.sync()
-  .then(seedDatabaseIfNeeded)
   .then(startServer)
   .catch(function(err) {
     console.log('Server failed to start due to error: %s', err);

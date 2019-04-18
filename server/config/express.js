@@ -18,7 +18,7 @@ import path from 'path';
 import lusca from 'lusca';
 import config from './environment';
 import session from 'express-session';
-import sqldb from '../sqldb';
+import sqldb from '../conn/sqldb';
 let Store = require('connect-session-sequelize')(session.Store);
 
 export default function(app) {
