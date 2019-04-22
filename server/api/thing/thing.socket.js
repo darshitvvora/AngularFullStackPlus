@@ -4,7 +4,7 @@
 
 'use strict';
 
-import ThingEvents from './thing.events';
+const ThingEvents = require('./thing.events');
 
 // Model events to emit
 var events = ['save', 'remove'];

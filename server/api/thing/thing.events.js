@@ -4,7 +4,7 @@
 
 'use strict';
 
-import {EventEmitter} from 'events';
+const {EventEmitter} = require('events');
 var Thing = require('../../sqldb').Thing;
 var ThingEvents = new EventEmitter();
 

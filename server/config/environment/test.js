@@ -3,21 +3,6 @@
 
 const { log: logging } = console;
 module.exports = {
-
-  // Sequelize connection options
-  cthree: {
-    username: process.env.CTHREE_MYSQL_USER,
-    password: process.env.CTHREE_MYSQL_PASS,
-    database: process.env.CTHREE_MYSQL_DB,
-    host: process.env.CTHREE_MYSQL_HOST,
-    dialect: 'mysql',
-    logging,
-    timezone: '+05:30',
-    dialectOptions: {
-      charset: 'utf8mb4',
-    },
-  },
-
   solr: {
     host: process.env.SOLR_HOST,
     port: process.env.SOLR_PORT,

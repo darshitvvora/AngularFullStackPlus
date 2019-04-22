@@ -16,7 +16,7 @@ const sqlDefaults = {
 
 const db = {
   Sequelize,
-  sequelize: new Sequelize(config.CTHREE_MYSQL, sqlDefaults),
+  sequelize: new Sequelize(config.MYSQL, sqlDefaults),
 };
 
 [
