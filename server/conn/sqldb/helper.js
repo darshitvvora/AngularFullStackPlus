@@ -33,7 +33,7 @@ module.exports = {
     };
   },
 
-  timestamps(type, sequelize) {
+  timestamps(type, sequelize, ) {
     const options = {
       created_on: {
         type: Sequelize.DATE,
